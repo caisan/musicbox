@@ -3,7 +3,7 @@
 # @Author: omi
 # @Date:   2014-08-24 21:51:57
 # @Last Modified by:   omi
-# @Last Modified time: 2015-03-30 23:36:21
+# @Last Modified time: 2015-06-20 01:49:41
 
 
 '''
@@ -38,7 +38,6 @@ class Ui:
         self.startcol = int(float(self.x)/5)
         self.indented_startcol = max(self.startcol - 3, 0)
         self.update_space()
-        
 
     def build_playinfo(self, song_name, artist, album_name, quality, start, pause=False):
         curses.noecho()
@@ -53,8 +52,8 @@ class Ui:
         else:
             self.screen.addstr(1, self.indented_startcol, '♫  ♪ ♫  ♪ ' + quality, curses.color_pair(3))
 
-        self.screen.addstr(1, min(self.indented_startcol + 18, self.x-1), 
-                song_name + self.space + artist + '  < ' + album_name + ' >', 
+        self.screen.addstr(1, min(self.indented_startcol + 18, self.x-1),
+                song_name + self.space + artist + '  < ' + album_name + ' >',
                 curses.color_pair(4))
 
         # The following script doesn't work. It is intended to scroll the playinfo
@@ -76,6 +75,19 @@ class Ui:
         #                        curses.color_pair(4))
 
         self.screen.refresh()
+
+    def build_lyric(self, lyric):
+        curses.noecho()
+        # refresh bottom 2 line
+        self.screen.move(21, 1)
+        self.screen.clrtoeol()
+        self.screen.move(22, 1)
+        self.screen.clrtoeol()
+
+        self.screen.addstr(21, self.indented_startcol, '♫  ♪ ♫  ♪ ' , curses.color_pair(3))
+
+        self.screen.refresh()
+
 
     def build_loading(self):
         self.screen.addstr(6, self.startcol, '享受高品质音乐，loading...', curses.color_pair(1))
@@ -116,12 +128,12 @@ class Ui:
                         # the length decides whether to scoll
                         if truelen(name) < self.x - self.startcol - 1:
                             self.screen.addstr(i - offset + 8, self.indented_startcol + len(lead),
-                                               name, 
+                                               name,
                                                curses.color_pair(2))
                         else:
                             name = scrollstring(name + '  ', start)
-                            self.screen.addstr(i - offset + 8, self.indented_startcol + len(lead), 
-                                               str(name), 
+                            self.screen.addstr(i - offset + 8, self.indented_startcol + len(lead),
+                                               str(name),
                                                curses.color_pair(2))
                     else:
                         self.screen.addstr(i - offset + 8, 0, ' ' * self.startcol)
@@ -350,7 +362,7 @@ class Ui:
         size = terminalsize.get_terminal_size()
         self.x = max(size[0], 10)
         self.y = max(size[1], 25)
-        
+
         # update intendations
         curses.resizeterm(self.y, self.x)
         self.startcol = int(float(self.x)/5)

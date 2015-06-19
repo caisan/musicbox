@@ -3,7 +3,7 @@
 # @Author: omi
 # @Date:   2014-08-24 21:51:57
 # @Last Modified by:   omi
-# @Last Modified time: 2015-05-26 01:06:55
+# @Last Modified time: 2015-06-20 02:12:02
 
 
 '''
@@ -284,6 +284,15 @@ class NetEase:
         except:
             return []
 
+    # song ids --> song urls ( lyric )
+    def song_lyric(self, music_id):
+        action = "http://music.163.com/api/song/lyric?os=osx&id=" + str(music_id) + "&lv=-1&tv=-1"
+        try:
+            data = self.httpRequest('GET', action)
+            return data['lrc']
+        except:
+            return []
+
 
     # 今日最热（0）, 本周最热（10），历史最热（20），最新节目（30）
     def djchannels(self, stype=0, offset=0, limit=50):
@@ -341,6 +350,18 @@ class NetEase:
                     song_info['artist'] = '未知艺术家'
 
                 temp.append(song_info)
+
+        elif dig_type == 'lyrics':
+            if data['lrc'] != None:
+                lyric = data['lrc']['lyric']
+            else:
+                lyric = '未找到歌词'
+
+            lyric_info = {
+                'version': data['lrc']['version'],
+                'lyric': lyric
+            }
+            temp = lyric_info
 
         elif dig_type == 'artists':
             temp = []
